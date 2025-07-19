@@ -1,4 +1,6 @@
-interface INotes{
+import { Types } from "mongoose"
+
+export interface INotes{
     title: String,
     content: String,
     category: "personal"|"work"|"study"|"other",
@@ -6,5 +8,6 @@ interface INotes{
     tags:{
         label: String,
         color: String
-    }
+    },
+    user: Types.ObjectId,
 }

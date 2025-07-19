@@ -1,28 +1,43 @@
 
 import express, { Request, Response } from "express";
 import { User } from "../models/users.models";
+import z, { parseAsync } from "zod";
+
+
 
 
 export const usersRoutes = express.Router();
 
+const createUserZodSchema = z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    age: z.number(),
+    email: z.string(),
+    password: z.string(),
+    role: z.string().optional()
+})
+
 usersRoutes.post('/create-user', async (req: Request, res: Response)=>{
-    const body = req.body
-    
-    // usersRoutesroach -1  of creating a data
-    // const myuser = new user({
-    //     title: "Learning Mongoose",
-    //     content: "i am learning mongooose"
-    // })
+    try{
+        // const body = await createUserZodSchema.parseAsync(req.body);
+        const body = req.body;
+        console.log(body, "zod body")
 
-    // await myuser.save()
-
-    const user = await User.create(body)
-    
-    res.status(201).json({
-        success: true,
-        message: "user created successfully",
-        user
-    })
+        const user = await User.create(body)
+        
+        res.status(201).json({
+            success: true,
+            message: "user created successfully",
+            user:user
+        })
+    } catch(error:any){
+         console.log(error)
+         res.status(201).json({
+            success: false,
+            message: error.message,
+            error
+        })
+    }
 })
 
 usersRoutes.get('/', async (req: Request, res: Response)=>{
